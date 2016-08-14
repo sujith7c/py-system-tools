@@ -3,11 +3,12 @@ import sys,time,os,getopt
 now = time.time()
 #Get the file/path as argument
 
-def options(cfg):
-  cfg = []
+def main(cfg):
+  cfg = {}
+  cfg['path']=""
+  cfg['numdays']="" 
   try:
-    opts,args = getopt.getopt(sys.argv[1:],"?q:h:p:d:", ["help","path","date"])
-    print opts,args
+    opts,args = getopt.getopt(sys.argv[1:],"?q:h:p:d:e:", ["help","path","date","expression"])
   except getopt.GetoptError, err:
     usage()
     print str(err)
@@ -17,19 +18,25 @@ def options(cfg):
       usage()
       exit(2)
     elif opt in ("-p","--path"):
-      cfg.append(arg)
+      cfg['path'] = arg
     elif opt in ("-d","--days"):
-      cfg.append(arg)
+      cfg['numdays'] = arg
+    elif opt in ("-e","--regx"):
+      cfg['exp'] = arg
     else:
       assert False, "Un handled option"
-  print cfg
+##------------------Write Logic for file Deletion 
+  #check the file/folde exist
+  if len(cfg['path']) !=0:
+      #code to check folder and files
+
 
 
 def usage():
   print "cleanfiles --help -p PATH -d number of days"
 
 if __name__ == "__main__":
-  options(sys.argv)
+  main(sys.argv)
   
 
 
