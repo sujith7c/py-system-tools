@@ -38,6 +38,19 @@ def usage():
 
 def list_files(path):
   files = [file for file in os.listdir(PATH) if os.path.isfile(os.path.join(PATH,file))]    
+
+def exclude_files(path):
+  pass
+  #code to exclude list
+
+def move_files(source,destination):
+  #code to move files
+  pass
+
+def delete_files(files):
+  #code to remove files
+  pass
+
   
 if __name__ == "__main__":
   main(sys.argv)
