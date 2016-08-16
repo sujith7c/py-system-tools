@@ -34,14 +34,15 @@ def main(cfg):
     PATH =  cfg['path']
 
 def usage():
-  print "cleanfiles --help -p PATH -d number of days"
+  print "usage: cleanfiles [--help] [-p <path>] [-d <number of days old>] [-n | --name to match]"
 
 def list_files(path):
-  files = [file for file in os.listdir(PATH) if os.path.isfile(os.path.join(PATH,file))]    
+  files = [file for file in os.listdir(path) if os.path.isfile(os.path.join(path,file))]    
 
-def exclude_files(path):
-  pass
-  #code to exclude list
+def match_files(files,rgx):
+  if not(files==""):
+    return [fl for fl in files if re.search(rgx,fl)]  
+  return None
 
 def move_files(source,destination):
   #code to move files
