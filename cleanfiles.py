@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys,time,os,getopt
 now = time.time()
+buffer_size = 1024*5
 #Get the file/path as argument
 
 def main(cfg):
@@ -26,7 +27,6 @@ def main(cfg):
       cfg['exp'] = arg
     else:
       assert False, "Un handled option"
-##------------------Write Logic for file Deletion 
   #check the file/folde exist
   if len(cfg['path']) !=0:
     #code to check folder and files
@@ -34,18 +34,25 @@ def main(cfg):
     PATH =  cfg['path']
 
 def usage():
-  print "usage: cleanfiles [--help] [-p <path>] [-d <number of days old>] [-n | --name to match]"
+  print """usage: cleanfiles [--help] [-p <path>] [-d <number of days old>] \n 
+        [-n | --name to match]"""
 
 def list_files(path):
   files = [file for file in os.listdir(path) if os.path.isfile(os.path.join(path,file))]    
 
 def match_files(files,rgx):
-  if not(files==""):
-    return [fl for fl in files if re.search(rgx,fl)]  
-  return None
-
+  if isinstance(files,list) and any(files):
+    return [fl for fl in files if re.search(rgx,fl)]
+  else:
+    return False
+"""move files essentially use copy and delete """
 def move_files(source,destination):
-  #code to move files
+  assert not os.path.isabs(source)
+  while 1:
+    copy_buffer =  source.read(buffer_size)
+    if not copy_buffer:
+      break
+    destination.write(copy_buffer)
   pass
 
 def delete_files(files):
