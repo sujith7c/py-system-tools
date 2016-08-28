@@ -1,0 +1,5 @@
+Copy file function
+ shutil lib doesnt come with the linux minimal dist installation so copy file using file object copy
+ 
+ 
+ 
