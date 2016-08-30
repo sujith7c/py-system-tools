@@ -9,7 +9,7 @@ def main(cfg):
   cfg['path']=""
   cfg['numdays']="" 
   try:
-    opts,args = getopt.getopt(sys.argv[1:],"?q:h:p:d:n:", ["quite","help","path","date","name"])
+    opts,args = getopt.getopt(sys.argv[1:],"?q:h:p:d:n:t", ["quite","help","path","date","name","test"])
     print opts
   except getopt.GetoptError, err:
     usage()
@@ -25,6 +25,11 @@ def main(cfg):
       cfg['numdays'] = arg
     elif opt in ("-n","--name"):
       cfg['exp'] = arg
+    elif opt in ("-t", "--test"):
+      src ="/root/test/acces10.txt"
+      dst = "/tmp/DI/aacces10.txt"
+      copyfile(src,dst)
+
     else:
       assert False, "Un handled option"
   #check the file/folde exist
@@ -59,7 +64,20 @@ def delete_files(files):
   #code to remove files
   pass
 
-  
+def copyfile_obj(fsrc,fdst,length=12*1024):
+  while 1:
+    buffer =  fsrc.read(length)
+    if not buffer:
+      break;
+    fdst.write(buffer)
+
+def copyfile(src,dst):
+  for fn in [src, dst]:
+    with open(src, 'rb') as fsrc:
+      with open(dst, 'wb') as fdst:
+        copyfile_obj(fsrc,fdst)
+
+
 if __name__ == "__main__":
   main(sys.argv)
   
