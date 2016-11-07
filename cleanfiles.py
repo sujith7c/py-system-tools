@@ -1,7 +1,12 @@
 #!/usr/bin/env python
-import sys,time,os,getopt
+import sys,time,os,getopt,re
+import locale
+
 now = time.time()
 buffer_size = 1024*5
+locale.setlocale(locale.LC_ALL,"")
+BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
+
 #Get the file/path as argument
 
 def main(cfg):
@@ -18,7 +23,7 @@ def main(cfg):
   for opt,arg in opts:
     if opt in ("-h","--help"):
       usage()
-      exit(2)
+      exit(1)
     elif opt in ("-p","--path"):
       cfg['path'] = arg
     elif opt in ("-d","--days"):
@@ -26,31 +31,38 @@ def main(cfg):
     elif opt in ("-n","--name"):
       cfg['exp'] = arg
     elif opt in ("-t", "--test"):
-      src ="/root/test/acces10.txt"
+      src ="/root/test/"
       dst = "/tmp/DI/aacces10.txt"
-      copyfile(src,dst)
+      fls= list_files(src)
+      print fls
 
     else:
       assert False, "Un handled option"
   #check the file/folde exist
-  if len(cfg['path']) !=0:
+  if (len(cfg['path']) !=0 and len(cfg['exp']) !=0):
     #code to check folder and files
-    print cfg['path']
     PATH =  cfg['path']
+    files = list_files(PATH)
+    matches =  match_files(files,cfg['exp'])
+    for match in matches: 
+      write_console(match,CYAN)
 
 def usage():
-  print """usage: cleanfiles [--help] [-p <path>] [-d <number of days old>] \n 
-        [-n | --name to match]"""
+  text = """usage: cleanfiles [--help] [-p <path>] [-d <number of days old>] [-n | --name to match]"""
+  write_console(text,GREEN)
 
 def list_files(path):
-  files = [file for file in os.listdir(path) if os.path.isfile(os.path.join(path,file))]    
+  return [file for file in os.listdir(path) if os.path.isfile(os.path.join(path,file))]     
 
 def match_files(files,rgx):
   if isinstance(files,list) and any(files):
-    return [fl for fl in files if re.search(rgx,fl)]
+    #return [fl for fl in files if re.search(pat,fl)]
+    pattern = re.compile(rgx)
+    return [fl for fl in files if re.search(pattern,fl)]
   else:
     return False
-"""move files essentially use copy and delete """
+
+"""move files basicaly  use copy and delete """
 def move_files(source,destination):
   assert not os.path.isabs(source)
   while 1:
@@ -77,6 +89,32 @@ def copyfile(src,dst):
       with open(dst, 'wb') as fdst:
         copyfile_obj(fsrc,fdst)
 
+"""Format the data in table"""
+
+
+
+def has_colours(stream):
+  if not hasattr(stream, "isatty"):
+    return False
+  if not stream.isatty():
+    return False # auto color only on TTYs
+  try:
+    import curses
+    curses.setupterm()
+    return curses.tigetnum("colors") > 2
+  except:
+    #guess false in case of error
+    return False
+
+def write_console(text,colour):
+  if has_colours:
+    seq = "\x1b[1;%dm" % (30+colour) + text + "\x1b[0m"
+    sys.stdout.write(seq)
+    sys.stdout.write('\n')
+  else:
+    sys.stdout.write(txt)
+
+has_colours = has_colours(sys.stdout)
 
 if __name__ == "__main__":
   main(sys.argv)
