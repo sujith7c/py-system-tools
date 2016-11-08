@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import sys,time,os,getopt,re
-import locale
+import locale,platform,time
+from datetime import datetime,date,time
 
-now = time.time()
 buffer_size = 1024*5
 locale.setlocale(locale.LC_ALL,"")
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
@@ -18,7 +18,7 @@ def main(cfg):
     print opts
   except getopt.GetoptError, err:
     usage()
-    print str(err)
+    #print str(err)
     sys.exit(2)
   for opt,arg in opts:
     if opt in ("-h","--help"):
@@ -46,9 +46,14 @@ def main(cfg):
     matches =  match_files(files,cfg['exp'])
     for match in matches: 
       write_console(match,CYAN)
-
+    if len(cfg['numdays']) !=0):
+    """find n days old files in windows and linux"""  
+      days = cfg['numdays']
+      day_diff = days*60*60*24
+      
 def usage():
-  text = """usage: cleanfiles [--help] [-p <path>] [-d <number of days old>] [-n | --name to match]"""
+  text = """usage: cleanfiles [--help] [-p <path>] [-d <number of days old>] [-n | --name to match]
+  -d number days old file in the specified directory / path eg: -d 3 """
   write_console(text,GREEN)
 
 def list_files(path):
@@ -113,6 +118,24 @@ def write_console(text,colour):
     sys.stdout.write('\n')
   else:
     sys.stdout.write(txt)
+
+"""Find n aged files in a system path"""
+def find_n_aged_files(filepath,day): 
+  """Calculate the date diff"""
+  time_obj = datetime(datetime.now().year, datetime.now().month, datetime.now().day)
+  today_st_time = time.mktime(time_obj.tuple())
+  time_diff = today_st_time - day 
+  """Dectect the OS"""
+  if platform.system() == "Windows":
+    stat = os.path.getctime(filepath)
+    if stat.st_mtime < time_diff:
+      return filepath
+  elif platform.system() == "Linux":
+    stat = os.stat()
+    if stat.st_mtime < time_diff:
+      return filepath
+  else:
+    write_console("Unsupported Platform !!!",RED)
 
 has_colours = has_colours(sys.stdout)
 
