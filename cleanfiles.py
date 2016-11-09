@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-import sys,time,os,getopt,re
-import locale,platform,time
-from datetime import datetime,date,time
+import sys,os,getopt,re
+import locale,platform,time,datetime
+#from datetime import datetime,date
 
 buffer_size = 1024*5
 locale.setlocale(locale.LC_ALL,"")
@@ -15,7 +15,7 @@ def main(cfg):
   cfg['numdays']="" 
   try:
     opts,args = getopt.getopt(sys.argv[1:],"?q:h:p:d:n:t", ["quite","help","path","date","name","test"])
-    print opts
+    #print opts
   except getopt.GetoptError, err:
     usage()
     #print str(err)
@@ -43,14 +43,19 @@ def main(cfg):
     #code to check folder and files
     PATH =  cfg['path']
     files = list_files(PATH)
+    #print files
     matches =  match_files(files,cfg['exp'])
     for match in matches: 
       write_console(match,CYAN)
-    if len(cfg['numdays']) !=0):
-    """find n days old files in windows and linux"""  
+
+    if (len(cfg['numdays']) !=0):
+      """find n days old files in windows and linux"""  
       days = cfg['numdays']
-      day_diff = days*60*60*24
-      
+      for match in matches:
+        filepath = PATH+match
+        print filepath
+        filelist = [find_n_aged_files(filepath,days)]
+
 def usage():
   text = """usage: cleanfiles [--help] [-p <path>] [-d <number of days old>] [-n | --name to match]
   -d number days old file in the specified directory / path eg: -d 3 """
@@ -122,16 +127,20 @@ def write_console(text,colour):
 """Find n aged files in a system path"""
 def find_n_aged_files(filepath,day): 
   """Calculate the date diff"""
-  time_obj = datetime(datetime.now().year, datetime.now().month, datetime.now().day)
-  today_st_time = time.mktime(time_obj.tuple())
-  time_diff = today_st_time - day 
+  day_timestamp = day*86400
+  td = datetime.date.today()
+  today =  datetime.date(td.year,td.month,td.day)
+  today_st_time = time.mktime(today.timetuple())
+  print today_st_time
+  print day
+  time_diff = today_st_time - int(day)
   """Dectect the OS"""
   if platform.system() == "Windows":
     stat = os.path.getctime(filepath)
     if stat.st_mtime < time_diff:
       return filepath
   elif platform.system() == "Linux":
-    stat = os.stat()
+    stat = os.stat(filepath)
     if stat.st_mtime < time_diff:
       return filepath
   else:
