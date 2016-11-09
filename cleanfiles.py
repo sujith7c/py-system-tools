@@ -15,10 +15,8 @@ def main(cfg):
   cfg['numdays']="" 
   try:
     opts,args = getopt.getopt(sys.argv[1:],"?q:h:p:d:n:t", ["quite","help","path","date","name","test"])
-    #print opts
   except getopt.GetoptError, err:
     usage()
-    #print str(err)
     sys.exit(2)
   for opt,arg in opts:
     if opt in ("-h","--help"):
@@ -34,7 +32,6 @@ def main(cfg):
       src ="/root/test/"
       dst = "/tmp/DI/aacces10.txt"
       fls= list_files(src)
-      print fls
 
     else:
       assert False, "Un handled option"
@@ -43,7 +40,6 @@ def main(cfg):
     #code to check folder and files
     PATH =  cfg['path']
     files = list_files(PATH)
-    #print files
     matches =  match_files(files,cfg['exp'])
     for match in matches: 
       write_console(match,CYAN)
@@ -53,7 +49,6 @@ def main(cfg):
       days = cfg['numdays']
       for match in matches:
         filepath = PATH+match
-        print filepath
         filelist = [find_n_aged_files(filepath,days)]
 
 def usage():
@@ -131,8 +126,6 @@ def find_n_aged_files(filepath,day):
   td = datetime.date.today()
   today =  datetime.date(td.year,td.month,td.day)
   today_st_time = time.mktime(today.timetuple())
-  print today_st_time
-  print day
   time_diff = today_st_time - int(day)
   """Dectect the OS"""
   if platform.system() == "Windows":
