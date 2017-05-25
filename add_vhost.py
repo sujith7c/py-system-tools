@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #This script crate Virtual Host for Apache2
-import os,sys
+import os,sys,re
 #Document Directory
 doc_root = "/var/www/html/"
 apache_conf_dir = "/etc/apache2/"
@@ -15,6 +15,11 @@ else:
  
  split_str = re.split(r'-|\*|_|\.',site) 
  str_escaped = re.escape(site)
+ fl = open('/etc/apache2/sites-available/magento.conf','r')
+ lines = fl.readlines()
+ for line in lines:
+   print line
+
  '''TODO: List the current Virtual Hosts'''
  
  
