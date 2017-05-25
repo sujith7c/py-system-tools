@@ -4,6 +4,22 @@ import os,sys,re
 #Document Directory
 doc_root = "/var/www/html/"
 apache_conf_dir = "/etc/apache2/"
+parent_start = False
+Parent_end = False
+
+def istag(line):
+ if re.match('\<VirtualHost',line):
+   return True
+ else:
+   return False
+
+def get_parent_content(contents):
+  if parent_start == parent_end == True :
+    return content
+  else:
+    for content in contents:
+      
+
 if os.getuid() != 0:
   print("You need to run this script with root privileges, exiting!")
   sys.exit()
@@ -18,12 +34,14 @@ else:
  fl = open('/etc/apache2/sites-available/magento.conf','r')
  lines = fl.readlines()
  for line in lines:
-   print line
+   print line.strip('\n')
+   istag(line)
 
  '''TODO: List the current Virtual Hosts'''
  
  
  '''if not exister create,open file object and create file'''
+
 
 
  
