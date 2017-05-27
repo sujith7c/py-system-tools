@@ -18,7 +18,7 @@ def get_parent_content(contents):
     return content
   else:
     for content in contents:
-      
+
 
 if os.getuid() != 0:
   print("You need to run this script with root privileges, exiting!")
@@ -28,8 +28,8 @@ else:
  print site
  '''TODO:check if this site/server name exis
  iterate through each file and read the ServerName value'''
- 
- split_str = re.split(r'-|\*|_|\.',site) 
+
+ split_str = re.split(r'-|\*|_|\.',site)
  str_escaped = re.escape(site)
  fl = open('/etc/apache2/sites-available/magento.conf','r')
  lines = fl.readlines()
@@ -38,12 +38,6 @@ else:
    istag(line)
 
  '''TODO: List the current Virtual Hosts'''
- 
- 
- '''if not exister create,open file object and create file'''
 
 
-
- 
-  
-
+ '''TODO if not exister create,open file object and create file'''
