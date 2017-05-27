@@ -4,20 +4,20 @@ import os,sys,re
 #Document Directory
 doc_root = "/var/www/html/"
 apache_conf_dir = "/etc/apache2/"
-parent_start = False
+vr_tag_start = False
 Parent_end = False
+parent_tag = '\<VirtualHost'
+field = 'ServerName'
 
-def istag(line):
- if re.match('\<VirtualHost',line):
-   return True
+def get_tag_val(parent_tag,field,content):
+ if re.match(parent_tag,content):
+   if re.match(field,content):
+     print "YS"
+     field_vals = content.split(' ')
+     print field_vals
  else:
+   print "no tag match"
    return False
-
-def get_parent_content(contents):
-  if parent_start == parent_end == True :
-    return content
-  else:
-    for content in contents:
 
 
 if os.getuid() != 0:
@@ -25,7 +25,6 @@ if os.getuid() != 0:
   sys.exit()
 else:
  site = raw_input("Enter the Virtual Host name : ").strip()
- print site
  '''TODO:check if this site/server name exis
  iterate through each file and read the ServerName value'''
 
@@ -34,10 +33,12 @@ else:
  fl = open('/etc/apache2/sites-available/magento.conf','r')
  lines = fl.readlines()
  for line in lines:
-   print line.strip('\n')
-   istag(line)
+   #print line.strip('\n')
+   get_tag_val(parent_tag,field,line)
+
 
  '''TODO: List the current Virtual Hosts'''
 
 
- '''TODO if not exister create,open file object and create file'''
+ '''TODO
+ if not exister create,open file object and create file'''
