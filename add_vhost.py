@@ -20,6 +20,30 @@ def get_tag_val(parent_tag,field,content):
    return False
 
 
+def is_parent(content):
+ if content != "":
+   if re.match('\<',content):
+     return True
+   else:
+     return False
+ else:
+   return False
+
+def get_child(parent,content):
+ tags = re.split('<',content)
+ print tags
+
+def split_tags(content):
+ if re.search('\<',content):
+   pass
+
+def tag_end(content):
+ pass
+
+def get_tag_val(content):
+  pass
+
+   
 if os.getuid() != 0:
   print("You need to run this script with root privileges, exiting!")
   sys.exit()
@@ -34,7 +58,11 @@ else:
  lines = fl.readlines()
  for line in lines:
    #print line.strip('\n')
-   get_tag_val(parent_tag,field,line)
+   if is_parent(line):
+     for ln in lines:
+       get_child(ln)
+       #get_child(parent,ln) 
+       #get_tag_val(parent_tag,field,line)
 
 
  '''TODO: List the current Virtual Hosts'''
