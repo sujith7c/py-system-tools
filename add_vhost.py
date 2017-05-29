@@ -12,8 +12,7 @@ field = 'ServerName'
 def get_tag_val(parent_tag,field,content):
  if re.match(parent_tag,content):
    if re.match(field,content):
-     print "YS"
-     field_vals = content.split(' ')
+     field_vals = content.split()
      print field_vals
  else:
    print "no tag match"
@@ -40,8 +39,11 @@ def split_tags(content):
 def tag_end(content):
  pass
 
-def get_tag_val(content):
-  pass
+def get_tag_val(tag,content):
+  if re.match(tag,content):
+    tags = content.split()
+    return tags
+
 
    
 if os.getuid() != 0:
@@ -60,10 +62,14 @@ else:
    #print line.strip('\n')
    if is_parent(line):
      for ln in lines:
-       get_child(ln)
+       #get_child(ln)
+       vals = get_tag_val('ServerName',ln.lstrip())
+       
        #get_child(parent,ln) 
        #get_tag_val(parent_tag,field,line)
 
+
+ print vals
 
  '''TODO: List the current Virtual Hosts'''
 
