@@ -9,43 +9,11 @@ Parent_end = False
 parent_tag = '\<VirtualHost'
 field = 'ServerName'
 
-def get_tag_val(parent_tag,field,content):
- if re.match(parent_tag,content):
-   if re.match(field,content):
-     field_vals = content.split()
-     print field_vals
- else:
-   print "no tag match"
-   return False
-
-
-def is_parent(content):
- if content != "":
-   if re.match('\<',content):
-     return True
-   else:
-     return False
- else:
-   return False
-
-def get_child(parent,content):
- tags = re.split('<',content)
- print tags
-
-def split_tags(content):
- if re.search('\<',content):
-   pass
-
-def tag_end(content):
- pass
-
 def get_tag_val(tag,content):
   if re.match(tag,content):
     tags = content.split()
     print tags
     return tags
-
-
    
 if os.getuid() != 0:
   print("You need to run this script with root privileges, exiting!")
@@ -61,15 +29,7 @@ else:
  lines = fl.readlines()
  vals = ''
  for line in lines:
-   #print line.strip('\n')
-   #if is_parent(line):
-   #for ln in lines:
-   #get_child(ln)
-     vals = get_tag_val('ServerName',line.lstrip())
-       
-       #get_child(parent,ln) 
-       #get_tag_val(parent_tag,field,line)
-
+   vals = get_tag_val('ServerName',line.lstrip())
 
  print vals
 
