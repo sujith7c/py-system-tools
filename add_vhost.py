@@ -42,6 +42,7 @@ def tag_end(content):
 def get_tag_val(tag,content):
   if re.match(tag,content):
     tags = content.split()
+    print tags
     return tags
 
 
@@ -58,12 +59,13 @@ else:
  str_escaped = re.escape(site)
  fl = open('/etc/apache2/sites-available/magento.conf','r')
  lines = fl.readlines()
+ vals = ''
  for line in lines:
    #print line.strip('\n')
-   if is_parent(line):
-     for ln in lines:
-       #get_child(ln)
-       vals = get_tag_val('ServerName',ln.lstrip())
+   #if is_parent(line):
+   #for ln in lines:
+   #get_child(ln)
+     vals = get_tag_val('ServerName',line.lstrip())
        
        #get_child(parent,ln) 
        #get_tag_val(parent_tag,field,line)
