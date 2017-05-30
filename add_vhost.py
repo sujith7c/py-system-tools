@@ -3,7 +3,7 @@
 import os,sys,re
 #Document Directory
 doc_root = "/var/www/html/"
-apache_conf_dir = "/etc/apache2/"
+apache_conf_dir = "/etc/apache2/sites-available/"
 vr_tag_start = False
 Parent_end = False
 parent_tag = '\<VirtualHost'
@@ -11,6 +11,7 @@ field = 'ServerName'
 
 def get_tag_val(tag,content):
  tags = content.split() if re.match(tag,content) else None 
+ print tags
  return tags
    
 if os.getuid() != 0:
@@ -23,9 +24,12 @@ else:
 
  split_str = re.split(r'-|\*|_|\.',site)
  str_escaped = re.escape(site)
- fl = open('/etc/apache2/sites-available/magento.conf','r')
- lines = fl.readlines()
- vals = filter(None,[ get_tag_val('ServerName',line.lstrip()) for line in lines])
+ conf_files = [f for f in os.listdir(apache_conf_dir) if f.endswith('.conf')]
+ print conf_files
+ for cfile in conf_files:
+   fl = open(apache_conf_dir+cfile,'r')
+   lines = fl.readlines()
+   vals = filter(None,[ get_tag_val('ServerName',line.lstrip()) for line in lines])
  print vals
  '''TODO: List the current Virtual Hosts'''
  '''TODO
