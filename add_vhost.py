@@ -10,10 +10,8 @@ parent_tag = '\<VirtualHost'
 field = 'ServerName'
 
 def get_tag_val(tag,content):
-  if re.match(tag,content):
-    tags = content.split()
-    print tags
-    return tags
+ tags = content.split() if re.match(tag,content) else None 
+ return tags
    
 if os.getuid() != 0:
   print("You need to run this script with root privileges, exiting!")
@@ -27,14 +25,8 @@ else:
  str_escaped = re.escape(site)
  fl = open('/etc/apache2/sites-available/magento.conf','r')
  lines = fl.readlines()
- vals = ''
- for line in lines:
-   vals = get_tag_val('ServerName',line.lstrip())
-
+ vals = filter(None,[ get_tag_val('ServerName',line.lstrip()) for line in lines])
  print vals
-
  '''TODO: List the current Virtual Hosts'''
-
-
  '''TODO
  if not exister create,open file object and create file'''
