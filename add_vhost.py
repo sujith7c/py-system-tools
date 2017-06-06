@@ -11,7 +11,6 @@ field = 'ServerName'
 
 def get_tag_val(tag,content):
  tags = content.split() if re.match(tag,content) else None 
- print tags
  return tags
    
 if os.getuid() != 0:
@@ -25,12 +24,16 @@ else:
  split_str = re.split(r'-|\*|_|\.',site)
  str_escaped = re.escape(site)
  conf_files = [f for f in os.listdir(apache_conf_dir) if f.endswith('.conf')]
- print conf_files
+ vhost = []
+ vals = []
+ #print conf_files
  for cfile in conf_files:
    fl = open(apache_conf_dir+cfile,'r')
    lines = fl.readlines()
    vals = filter(None,[ get_tag_val('ServerName',line.lstrip()) for line in lines])
- print vals
+   vhost.append(vals)
+   fl.close()
+ print vhost
  '''TODO: List the current Virtual Hosts'''
  '''TODO
  if not exister create,open file object and create file'''
