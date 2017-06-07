@@ -25,13 +25,13 @@ else:
  str_escaped = re.escape(site)
  conf_files = [f for f in os.listdir(apache_conf_dir) if f.endswith('.conf')]
  vhost = []
- vals = []
  #print conf_files
  for cfile in conf_files:
    fl = open(apache_conf_dir+cfile,'r')
    lines = fl.readlines()
-   vals = filter(None,[ get_tag_val('ServerName',line.lstrip()) for line in lines])
-   vhost.append(vals)
+   vals = filter(None,[get_tag_val('ServerName',line.lstrip()) for line in lines])
+   if len(vals) > 0 :
+     vhost.append(vals)
    fl.close()
  print vhost
  '''TODO: List the current Virtual Hosts'''
