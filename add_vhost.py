@@ -15,9 +15,15 @@ def get_tag_val(tag,content):
    tags = {meta[0]:meta[1]}
  else:
    tags = None
- #tags = content.split() if re.match(tag,content.lstrip()) else None
-  return tags
-   
+   #tags = content.split() if re.match(tag,content.lstrip()) else None
+ return tags
+
+def get_vhosts(meta_vhosts):
+  for meta in meta_vhosts:
+    for host in meta:
+      print host['ServerName']
+
+
 if os.getuid() != 0:
   print("You need to run this script with root privileges, exiting!")
   sys.exit()
@@ -29,16 +35,16 @@ else:
  split_str = re.split(r'-|\*|_|\.',site)
  str_escaped = re.escape(site)
  conf_files = [f for f in os.listdir(apache_conf_dir) if f.endswith('.conf')]
- vhost = []
+ vhosts = []
  #print conf_files
  for cfile in conf_files:
    fl = open(apache_conf_dir+cfile,'r')
    lines = fl.readlines()
    vals = filter(None,(get_tag_val('ServerName',line) for line in lines))
    if len(vals) > 0 :
-     vhost.append(vals)
+     vhosts.append(vals)
    fl.close()
- print vhost
+ 
  '''TODO: List the current Virtual Hosts'''
- '''TODO
- if not exister create,open file object and create file'''
+ get_vhosts(vhosts)
+ '''if not exister create,open file object and create file'''
