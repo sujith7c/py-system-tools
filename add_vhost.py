@@ -10,8 +10,13 @@ parent_tag = '\<VirtualHost'
 field = 'ServerName'
 
 def get_tag_val(tag,content):
- tags = content.split() if re.match(tag,content) else None 
- return tags
+ if re.match(tag,content.lstrip()):
+   meta = content.split()
+   tags = {meta[0]:meta[1]}
+ else:
+   tags = None
+ #tags = content.split() if re.match(tag,content.lstrip()) else None
+  return tags
    
 if os.getuid() != 0:
   print("You need to run this script with root privileges, exiting!")
@@ -29,7 +34,7 @@ else:
  for cfile in conf_files:
    fl = open(apache_conf_dir+cfile,'r')
    lines = fl.readlines()
-   vals = filter(None,[get_tag_val('ServerName',line.lstrip()) for line in lines])
+   vals = filter(None,(get_tag_val('ServerName',line) for line in lines))
    if len(vals) > 0 :
      vhost.append(vals)
    fl.close()
