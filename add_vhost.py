@@ -28,8 +28,6 @@ def vhosts_exist(site,metaobjs):
   for obj in metaobjs:
     if obj == site: 
       return True
-    print('\x1b[6;30;42m' + obj  + '\x1b[0m')
-    print('\x1b[6;30;30;30;31m' + obj + '\x1b[0m') 
   return False
 
 
@@ -59,6 +57,9 @@ else:
 
  '''if not exister create,open file object and create file'''
  ret = vhosts_exist(site,vhobj)
- print ret
+ if ret == True: 
+   print('\x1b[6;30;30;30;31m' + 'Vhost Exist! please change the vhost name' + '\x1b[0m')
+ else:
+   print('\x1b[6;30;42m' + 'Vhost can be added'  + '\x1b[0m')
 
 
