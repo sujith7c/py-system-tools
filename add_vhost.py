@@ -1,11 +1,16 @@
 #!/usr/bin/python
 #This script crate Virtual Host for Apache2
 import os,sys,re
+import readline
+
 #Document Directory
 doc_root = "/var/www/html/"
 apache_conf_dir = "/etc/apache2/sites-available/"
 parent_tag = '\<VirtualHost'
 field = 'ServerName'
+
+readline.parse_and_bind('tab: complete')
+readline.parse_and_bind('set editing-mode vi')
 
 def get_tag_val(tag,content):
  if re.match(tag,content.lstrip()):
@@ -30,6 +35,28 @@ def vhosts_exist(site,metaobjs):
       return True
   return False
 
+def create_vhost_conf(directory,name):
+  try:
+    if os.path.isdir(directory):
+      try:
+        vconfFile = apache_conf_dir + '/' + name + '.conf'
+        confile = open(vconfFile,'w')
+        fstream =''
+        fstream += '<VirtualHost *:80>' + '\n'
+        fstream += '  ServerName '+name + '\n'
+        fstream += '  DocumentRoot ' + directory + '\n'
+        fstream += '  <Directory ' + directory + '/>' + '\n'
+        fstream += '    Options Indexes FollowSymLinks MultiViews' + '\n'
+        fstream += '    AllowOverride All' + '\n'
+        fstream += '  </Directory>' + '\n'
+        fstream += '</VirtualHost>' + '\n'
+        ret = confile.write(fstream)
+        confile.close()
+        print ret
+      except IOError:
+        print "Unable to opne the file for conf file creation"
+  except IOError:
+    print "Unable to open the target path"
 
 if os.getuid() != 0:
   print("You need to run this script with root privileges, exiting!")
@@ -60,6 +87,13 @@ else:
  if ret == True: 
    print('\x1b[6;30;30;30;31m' + 'Vhost Exist! please change the vhost name' + '\x1b[0m')
  else:
-   print('\x1b[6;30;42m' + 'Vhost can be added'  + '\x1b[0m')
-
+   #print('\x1b[6;30;42m' + 'Vhost can be added'  + '\x1b[0m')
+   docdir = raw_input("Enter the document directory: ")
+   if docdir !="" : 
+     if os.path.isdir(docdir):
+       create_vhost_conf(docdir,site)
+       print('\x1b[6;30;42m' + 'New Vhost '+ site  +' added'  + '\x1b[0m')     
+     else:
+       sys.exit("Document directory not provided")
+      
 
