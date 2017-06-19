@@ -3,12 +3,12 @@
 import os,sys,re
 import readline
 
-#Document Directory
+#Apache Document Directory
 doc_root = "/var/www/html/"
 apache_conf_dir = "/etc/apache2/sites-available/"
 parent_tag = '\<VirtualHost'
 field = 'ServerName'
-
+#GNU Auto complete feature
 readline.parse_and_bind('tab: complete')
 readline.parse_and_bind('set editing-mode vi')
 
@@ -28,13 +28,13 @@ def get_vhosts(meta_vhosts):
       vhost_arr.append(host['ServerName'])
 
   return vhost_arr
-
+#check virtual host exist or not
 def vhosts_exist(site,metaobjs):
   for obj in metaobjs:
     if obj == site: 
       return True
   return False
-
+#Create the virtual host file in the direcotry
 def create_vhost_conf(directory,name):
   try:
     if os.path.isdir(directory):
@@ -57,6 +57,16 @@ def create_vhost_conf(directory,name):
         print "Unable to opne the file for conf file creation"
   except IOError:
     print "Unable to open the target path"
+
+def create_doc_root(directory):
+  if os.path.isdir(directory):
+    print "Document Root already exist"
+  else:
+    try:
+      os.mkdir(directory)
+    except IOError:
+      print "Can not make Document root directoy"
+
 
 if os.getuid() != 0:
   print("You need to run this script with root privileges, exiting!")
@@ -90,10 +100,11 @@ else:
    #print('\x1b[6;30;42m' + 'Vhost can be added'  + '\x1b[0m')
    docdir = raw_input("Enter the document directory: ")
    if docdir !="" : 
+     create_doc_root(docdir)
      if os.path.isdir(docdir):
        create_vhost_conf(docdir,site)
        print('\x1b[6;30;42m' + 'New Vhost '+ site  +' added'  + '\x1b[0m')     
      else:
-       sys.exit("Document directory not provided")
+       sys.exit("Sys Error!!,contact support")
       
 
